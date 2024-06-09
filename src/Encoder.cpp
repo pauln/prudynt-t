@@ -108,7 +108,7 @@ bool Encoder::init_substream() {
         LOG_ERROR("system_init failed ");
     }
 
-    ret = encoder_init();
+    ret = substream_encoder_init();
     if (ret < 0) {
         LOG_ERROR("Encoder Init Failed");
         return true;
