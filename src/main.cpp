@@ -68,12 +68,6 @@ int main(int argc, const char *argv[]) {
         LOG_ERROR("Encoder initialization failed.");
         return 1;
     }
-    if (Config::singleton()->substream0enable) {
-        if (sub.init_substream()) {
-            LOG_ERROR("Substream Encoder initialization failed.");
-            return 1;
-        }
-    }
 
 
     enc_thread = std::thread(start_component<Encoder>, enc);
@@ -91,6 +85,10 @@ int main(int argc, const char *argv[]) {
     }
 
     if (Config::singleton()->substream0enable) {
+        if (sub.init_substream()) {
+            LOG_ERROR("Substream Encoder initialization failed.");
+            return 1;
+        }
         LOG_DEBUG("Substream enabled");
         sub_thread = std::thread(&Encoder::run_substream, &sub);
     }
