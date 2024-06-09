@@ -125,12 +125,12 @@ bool Encoder::init_substream() {
     }
     LOG_DEBUG("IMP_System_Bind(FS, ENC)");
 
-    ret = IMP_FrameSource_EnableChn(1);
+    ret = IMP_FrameSource_EnableChn(2);
     if (ret < 0) {
         LOG_ERROR("IMP_FrameSource_EnableChn() == " << ret);
         return true;
     }
-    LOG_DEBUG("Frame Source Channel 1 enabled");
+    LOG_DEBUG("Frame Source Channel 2 enabled");
 
     return false;
 }
@@ -397,19 +397,19 @@ int Encoder::substream_encoder_init() {
 
 #endif
 
-    ret = IMP_Encoder_CreateChn(1, &channel_attr);
+    ret = IMP_Encoder_CreateChn(2, &channel_attr);
     if (ret < 0) {
         LOG_ERROR("IMP_Encoder_CreateChn() == " << ret);
         return ret;
     }
-    LOG_DEBUG("Encoder Channel 1 created");
+    LOG_DEBUG("Encoder Channel 2 created");
 
-    ret = IMP_Encoder_RegisterChn(1, 1);
+    ret = IMP_Encoder_RegisterChn(1, 2);
     if (ret < 0) {
         LOG_ERROR("IMP_Encoder_RegisterChn() == " << ret);
         return ret;
     }
-    LOG_DEBUG("Encoder Channel 1 registered");
+    LOG_DEBUG("Encoder Channel 2 registered");
 
 #if defined(PLATFORM_T10) || defined(PLATFORM_T20) || defined(PLATFORM_T21) || defined(PLATFORM_T23) || defined(PLATFORM_T30)
 /*
@@ -730,13 +730,13 @@ void Encoder::run_substream() {
     //handle timestamp overflows. :)
     IMP_System_RebaseTimeStamp(0);
     gettimeofday(&imp_time_base, NULL);
-    IMP_Encoder_StartRecvPic(0);
+    IMP_Encoder_StartRecvPic(2);
     LOG_DEBUG("Substream Encoder StartRecvPic success");
 
     while (true) {
         IMPEncoderStream stream;
 
-        if (IMP_Encoder_GetStream(0, &stream, true) != 0) {
+        if (IMP_Encoder_GetStream(2, &stream, true) != 0) {
             LOG_ERROR("IMP_Encoder_GetStream() failed");
             break;
         }
@@ -833,9 +833,9 @@ void Encoder::run_substream() {
         if (Config::singleton()->OSDEnable) {
             osd.update();
         }
-        IMP_Encoder_ReleaseStream(0, &stream);
+        IMP_Encoder_ReleaseStream(2, &stream);
         last_nal_ts = nal_ts;
         std::this_thread::yield();
     }
-    IMP_Encoder_StopRecvPic(0);
+    IMP_Encoder_StopRecvPic(2);
 }
