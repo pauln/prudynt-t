@@ -44,6 +44,12 @@ public:
     int stream0rotation;
     int stream0scaleWidth;
     int stream0scaleHeight;
+    bool substream0enable;
+    int substream0width;
+    int substream0height;
+    int substream0fps;
+    int substream0bitrate;
+    std::string substream0endpoint;
     int motionDebounce;
     int motionPostTime;
     int motionCooldownTime;

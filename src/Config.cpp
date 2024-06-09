@@ -112,6 +112,7 @@ Config::Config() {
         {"stream1.jpeg_enabled", stream1jpegEnable, true, [](const bool &v) { return true; }, "JPEG stream for Stream0 enabled flag. Must be either true or false."},
         {"motion.enabled", motionEnable, false, [](const bool &v) { return true; }, "Motion detection enabled flag. Must be either true or false."},
         {"stream0.scale_enabled", stream0scaleEnable, false, [](const bool &v) { return true; }, "Scaling for Stream0 enabled flag. Must be either true or false."},
+        {"substream0.enabled", substream0enable, false, [](const bool &v) { return true; }, "Substream0 enabled flag. Must be either true or false."},
     };
 
     std::vector<ConfigItem<std::string>> stringItems = {
@@ -129,6 +130,7 @@ Config::Config() {
         {"stream1.jpeg_path", stream1jpegPath, "/tmp/snapshot.jpg", [](const std::string &v) { return !v.empty(); }, "Path for JPEG snapshots must not be empty."},
         {"osd.logo_path", OSDLogoPath, "/usr/share/thingino_logo_1.bgra", [](const std::string &v) { return !v.empty(); }, "OSD Logo path cannot be empty."},
         {"motion.script_path", motionScriptPath, "/usr/sbin/motion", [](const std::string &v) { return !v.empty(); }, "Motion detection script path cannot be empty."},
+        {"substream0.rtsp_endpoint", substream0endpoint, "ch0_sub", [](const std::string &v) { return !v.empty(); }, "Substream0 RTSP endpoint cannot be empty."},
     };
 
     std::vector<ConfigItem<int>> intItems = {
@@ -177,6 +179,10 @@ Config::Config() {
         {"motion.roi_1_x", motionRoi1X, 1920, [](const int &v) { return v >= 0; }, "Motion ROI 1 X position should be non-negative"},
         {"motion.roi_1_y", motionRoi1Y, 1080, [](const int &v) { return v >= 0; }, "Motion ROI 1 Y position should be non-negative"},
         {"motion.roi_count", roiCnt, 1, [](const int &v) { return v >= 0 && v <= 4; }, "Motion ROI count should be between 0 and 4"},
+        {"substream0.width", substream0width, 1280, [](const int &v) { return v > 0; }, "Width of substream 0 in pixels", "/proc/jz/sensor/width"},
+        {"substream0.height", substream0height, 720, [](const int &v) { return v > 0; }, "Height of substream 0 in pixels", "/proc/jz/sensor/height"},
+        {"substream0.bitrate", substream0bitrate, 500, [](const int &v) { return v > 0; }, "Bitrate for substream 0, must be greater than 0"},
+        {"substream0.fps", substream0fps, 5, [](const int &v) { return v > 0 && v <= 60; }, "Substream 0 FPS must be between 1 and 60"},
     };
 
     std::vector<ConfigItem<unsigned int>> uintItems = {

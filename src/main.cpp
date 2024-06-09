@@ -17,6 +17,7 @@ template <class T> void start_component(T c) {
 
 Encoder enc;
 Encoder jpg;
+Encoder sub;
 Motion motion;
 RTSP rtsp;
 
@@ -39,6 +40,7 @@ int main(int argc, const char *argv[]) {
     LOG_INFO("PRUDYNT Video Daemon: " << VERSION);
 
     std::thread enc_thread;
+    std::thread sub_thread;
     std::thread rtsp_thread;
     std::thread motion_thread;
 
@@ -66,6 +68,12 @@ int main(int argc, const char *argv[]) {
         LOG_ERROR("Encoder initialization failed.");
         return 1;
     }
+    if (Config::singleton()->substream0enable) {
+        if (sub.init_substream()) {
+            LOG_ERROR("Substream Encoder initialization failed.");
+            return 1;
+        }
+    }
 
 
     enc_thread = std::thread(start_component<Encoder>, enc);
@@ -82,7 +90,13 @@ int main(int argc, const char *argv[]) {
         jpegThread.detach();
     }
 
+    if (Config::singleton()->substream0enable) {
+        LOG_DEBUG("Substream enabled");
+        sub_thread = std::thread(&Encoder::run_substream, &sub);
+    }
+
     enc_thread.join();
+    sub_thread.join();
     rtsp_thread.join();
     motion_thread.join();
 

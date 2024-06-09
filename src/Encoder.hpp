@@ -59,7 +59,9 @@ class Encoder {
 public:
     Encoder();
     bool init();
+    bool init_substream();
     void run();
+    void run_substream();
     void jpeg_snap();
 
     static void flush() {
@@ -89,6 +91,7 @@ private:
     int system_init();
     int framesource_init();
     int encoder_init();
+    int substream_encoder_init();
     static std::mutex sinks_lock;
     static uint32_t sink_id;
     static std::map<uint32_t, EncoderSink> sinks;
