@@ -115,8 +115,8 @@ bool Encoder::init_substream() {
     }
 
     // OSD is not enabled, initialize without OSD and bind FrameSource directly to Encoder
-    IMPCell fs = { DEV_ID_FS, 1, 1 };
-    IMPCell enc = { DEV_ID_ENC, 1, 1 };
+    IMPCell fs = { DEV_ID_FS, 1, 0 };
+    IMPCell enc = { DEV_ID_ENC, 1, 0 };
     // Framesource -> ENC
     ret = IMP_System_Bind(&fs, &enc);
     if (ret < 0) {
