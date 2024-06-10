@@ -115,8 +115,8 @@ bool Encoder::init_substream() {
     }
 
     // OSD is not enabled, initialize without OSD and bind FrameSource directly to Encoder
-    IMPCell fs = { DEV_ID_FS, 1, 2 };
-    IMPCell enc = { DEV_ID_ENC, 1, 2 };
+    IMPCell fs = { DEV_ID_FS, 1, 1 };
+    IMPCell enc = { DEV_ID_ENC, 1, 1 };
     // Framesource -> ENC
     ret = IMP_System_Bind(&fs, &enc);
     if (ret < 0) {
@@ -125,12 +125,12 @@ bool Encoder::init_substream() {
     }
     LOG_DEBUG("IMP_System_Bind(FS, ENC)");
 
-    ret = IMP_FrameSource_EnableChn(2);
+    ret = IMP_FrameSource_EnableChn(1);
     if (ret < 0) {
         LOG_ERROR("IMP_FrameSource_EnableChn() == " << ret);
         return true;
     }
-    LOG_DEBUG("Frame Source Channel 2 enabled");
+    LOG_DEBUG("Frame Source Channel 1 enabled");
 
     return false;
 }
@@ -397,19 +397,19 @@ int Encoder::substream_encoder_init() {
 
 #endif
 
-    ret = IMP_Encoder_CreateChn(2, &channel_attr);
+    ret = IMP_Encoder_CreateChn(1, &channel_attr);
     if (ret < 0) {
         LOG_ERROR("IMP_Encoder_CreateChn() == " << ret);
         return ret;
     }
-    LOG_DEBUG("Encoder Channel 2 created");
+    LOG_DEBUG("Encoder Channel 1 created");
 
-    ret = IMP_Encoder_RegisterChn(1, 2);
+    ret = IMP_Encoder_RegisterChn(1, 1);
     if (ret < 0) {
         LOG_ERROR("IMP_Encoder_RegisterChn() == " << ret);
         return ret;
     }
-    LOG_DEBUG("Encoder Channel 2 registered");
+    LOG_DEBUG("Encoder Channel 1 registered");
 
 #if defined(PLATFORM_T10) || defined(PLATFORM_T20) || defined(PLATFORM_T21) || defined(PLATFORM_T23) || defined(PLATFORM_T30)
 /*
